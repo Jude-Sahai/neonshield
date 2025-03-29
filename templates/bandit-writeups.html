@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bandit Writeups - NeonShield CyberHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: url('/static/0.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            position: relative;
+            color: #00DDEB;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 19, 47, 0.7);
+            z-index: -1;
+        }
+        
+        .container {
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid #FF00FF;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            max-width: 1000px;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .home-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-decoration: none;
+            padding: 8px 16px;
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            font-size: 14px;
+            background: rgba(255, 0, 255, 0.1);
+            text-shadow: 0 0 10px #FF00FF;
+            transition: all 0.3s ease;
+            animation: neonFlicker 1.5s infinite alternate;
+        }
+        
+        .home-btn:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 15px #FF00FF;
+        }
+        
+        @keyframes neonFlicker {
+            0% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+            50% { text-shadow: 0 0 2px #FF00FF, 0 0 5px #FF00FF; }
+            100% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+        }
+        
+        h1 {
+            font-size: 2em;
+            margin: 0 0 25px 0;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700;
+            animation: pulse 2s infinite;
+        }
+        
+        h2 {
+            font-size: 1.5em;
+            color: #FF00FF;
+            margin: 40px 0 20px 0;
+            text-shadow: 0 0 10px #FF00FF;
+            border-bottom: 1px solid #00DDEB;
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 1.2em;
+            color: #00DDEB;
+            margin: 25px 0 15px 0;
+            text-shadow: 0 0 8px #00DDEB;
+        }
+        
+        .level {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border-left: 3px solid #FF00FF;
+        }
+        
+        .summary {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+        }
+        
+        .command {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 2px solid #00DDEB;
+            line-height: 1.5;
+        }
+        
+        .output {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 2px solid #FF00FF;
+            line-height: 1.5;
+        }
+        
+        .password {
+            margin: 30px 0 10px 0;
+            padding: 18px;
+            background: rgba(0, 221, 235, 0.1);
+            border-radius: 5px;
+            border-left: 3px solid #00DDEB;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+        
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #FFD700; }
+            50% { text-shadow: 0 0 20px #FFD700; }
+            100% { text-shadow: 0 0 10px #FFD700; }
+        }
+        
+        .level-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0 0 30px 0;
+        }
+        
+        .level-link {
+            padding: 10px 18px;
+            background: rgba(255, 0, 255, 0.1);
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 5px 0;
+        }
+        
+        .level-link:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 10px #FF00FF;
+        }
+        
+        .image-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            border: 1px solid #00DDEB;
+        }
+        
+        .screenshot {
+            max-width: 100%;
+            border-radius: 3px;
+            border: 1px solid #FF00FF;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+        }
+        
+        .image-caption {
+            font-size: 0.9em;
+            color: #00DDEB;
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        ul {
+            margin: 15px 0 25px 25px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bandit Writeups (Levels 0-20)</h1>
+        
+        <div class="level-nav">
+            <a href="#level0" class="level-link">Level 0-1</a>
+            <a href="#level1" class="level-link">Level 1-2</a>
+            <a href="#level2" class="level-link">Level 2-3</a>
+            <a href="#level3" class="level-link">Level 3-4</a>
+            <a href="#level4" class="level-link">Level 4-5</a>
+            <a href="#level5" class="level-link">Level 5-6</a>
+            <a href="#level6" class="level-link">Level 6-7</a>
+            <a href="#level7" class="level-link">Level 7-8</a>
+            <a href="#level8" class="level-link">Level 8-9</a>
+            <a href="#level9" class="level-link">Level 9-10</a>
+            <a href="#level10" class="level-link">Level 10-11</a>
+            <a href="#level11" class="level-link">Level 11-12</a>
+            <a href="#level12" class="level-link">Level 12-13</a>
+            <a href="#level13" class="level-link">Level 13-14</a>
+            <a href="#level14" class="level-link">Level 14-15</a>
+            <a href="#level15" class="level-link">Level 15-16</a>
+            <a href="#level16" class="level-link">Level 16-17</a>
+            <a href="#level17" class="level-link">Level 17-18</a>
+            <a href="#level18" class="level-link">Level 18-19</a>
+            <a href="#level19" class="level-link">Level 19-20</a>
+        </div>
+
+        <!-- Level 0 → 1 -->
+        <div class="level" id="level0">
+            <h2>Bandit Level 0 → Level 1</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit is a wargame by OverTheWire that teaches Linux commands and basic security concepts. Level 0 starts you off with a simple goal: logging into the game server through SSH.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>Log into the game server using SSH</li>
+                    <li>Host: bandit.labs.overthewire.org</li>
+                    <li>Port: 2220</li>
+                    <li>Username: bandit0</li>
+                    <li>Password: bandit0</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server Using SSH:</h4>
+                <div class="command">ssh bandit0@bandit.labs.overthewire.org -p 2220</div>
+                <p>When prompted, enter the password: <span class="command">bandit0</span></p>
+                
+                <h4>2. Retrieve the Password for Level 1:</h4>
+                <div class="command">ls</div>
+                <div class="output">readme</div>
+                <div class="command">cat readme</div>
+                <div class="output">
+The password you are looking for is: ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
+                </div>
+            </div>
+            
+            <div class="password">
+                Password for Level 1: <strong>ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If</strong>
+            </div>
+        </div>
+
+        <!-- Level 1 → 2 -->
+        <div class="level" id="level1">
+            <h2>Bandit Level 1 → Level 2</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 1 introduces a slightly more challenging task compared to Level 0. The goal is to retrieve the password for Level 2, which is stored in a file named <code>-</code> located in the home directory.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server Using SSH:</h4>
+                <div class="command">ssh bandit1@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 0: <span class="command">ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If</span></p>
+                
+                <h4>2. Locate the File Named <code>-</code>:</h4>
+                <div class="command">ls</div>
+                <div class="output">-</div>
+                
+                <h4>3. Retrieve the Password for Level 2:</h4>
+                <div class="command">cat < -</div>
+                <div class="output">263JGJPfgU6LtdEvgfWU1XP5yac29mFx</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 2: <strong>263JGJPfgU6LtdEvgfWU1XP5yac29mFx</strong>
+            </div>
+        </div>
+
+        <!-- Level 2 → 3 -->
+        <div class="level" id="level2">
+            <h2>Bandit Level 2 → Level 3</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 2 presents a challenge involving a file with spaces in its name. The goal is to retrieve the password for Level 3, which is stored in a file named <code>spaces in this filename</code> located in the home directory.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit2@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 1: <span class="command">263JGJPfgU6LtdEvgfWU1XP5yac29mFx</span></p>
+                
+                <h4>2. Locate the File with Spaces in the Filename:</h4>
+                <div class="command">ls</div>
+                <div class="output">spaces in this filename</div>
+                
+                <h4>3. Retrieve the Password for Level 3:</h4>
+                <div class="command">cat "spaces in this filename"</div>
+                <div class="output">MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 3: <strong>MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx</strong>
+            </div>
+        </div>
+
+        <!-- Level 3 → 4 -->
+        <div class="level" id="level3">
+            <h2>Bandit Level 3 → Level 4</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 3 introduces the concept of hidden files in Linux. The goal is to retrieve the password for Level 4, which is stored in a hidden file within the <code>inhere</code> directory.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit3@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 2: <span class="command">MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx</span></p>
+
+                <h4>2. Navigate to the <code>inhere</code> Directory:</h4>
+                <div class="command">ls</div>
+                <div class="output">inhere</div>
+                <div class="command">cd inhere</div>
+                
+                <h4>3. Locate the Hidden File:</h4>
+                <div class="command">ls -la</div>
+                <div class="output">.Hiding-From-You</div>
+                
+                <h4>4. Retrieve the Password for Level 4:</h4>
+                <div class="command">cat .Hiding-From-You</div>
+                <div class="output">2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 4: <strong>2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ</strong>
+            </div>
+        </div>
+
+        <!-- Level 4 → 5 -->
+        <div class="level" id="level4">
+            <h2>Bandit Level 4 → Level 5</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 4 challenges users to identify the only human-readable file among a set of files in the <code>inhere</code> directory. The goal is to retrieve the password for Level 5 from this file.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit4@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 3: <span class="command">2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ</span></p>
+
+                <h4>2. Navigate to the <code>inhere</code> Directory:</h4>
+                <div class="command">cd inhere</div>
+                
+                <h4>3. Identify the Human-Readable File:</h4>
+                <div class="command">file -- -file*</div>
+                <div class="output">-file07: ASCII text</div>
+                
+                <h4>4. Retrieve the Password for Level 5:</h4>
+                <div class="command">cat -- -file07</div>
+                <div class="output">4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 5: <strong>4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw</strong>
+            </div>
+        </div>
+
+        <!-- Level 5 → 6 -->
+        <div class="level" id="level5">
+            <h2>Bandit Level 5 → Level 6</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 5 requires users to locate a file within the <code>inhere</code> directory that meets specific criteria: it must be human-readable, 1033 bytes in size, and not executable.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit5@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 4: <span class="command">4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw</span></p>
+
+                <h4>2. Locate the File with Specific Properties:</h4>
+                <div class="command">find . -type f -size 1033c -exec file {} + | grep ASCII</div>
+                <div class="output">./maybehere07/.file2: ASCII text</div>
+                
+                <h4>3. Retrieve the Password for Level 6:</h4>
+                <div class="command">cat ./maybehere07/.file2</div>
+                <div class="output">HWasnPhtq9AVKe0dmk45nxy20cvUa6EG</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 6: <strong>HWasnPhtq9AVKe0dmk45nxy20cvUa6EG</strong>
+            </div>
+        </div>
+
+        <!-- Level 6 → 7 -->
+        <div class="level" id="level6">
+            <h2>Bandit Level 6 → Level 7</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 6 requires users to locate a file on the server that meets specific criteria: it must be owned by user <code>bandit7</code>, owned by group <code>bandit6</code>, and be exactly 33 bytes in size.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit6@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 5: <span class="command">HWasnPhtq9AVKe0dmk45nxy20cvUa6EG</span></p>
+
+                <h4>2. Locate the File with Specific Properties:</h4>
+                <div class="command">find / -type f -user bandit7 -group bandit6 -size 33c 2>/dev/null</div>
+                <div class="output">/var/lib/dpkg/info/bandit7.password</div>
+                
+                <h4>3. Retrieve the Password for Level 7:</h4>
+                <div class="command">cat /var/lib/dpkg/info/bandit7.password</div>
+                <div class="output">morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 7: <strong>morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj</strong>
+            </div>
+        </div>
+
+        <!-- Level 7 → 8 -->
+        <div class="level" id="level7">
+            <h2>Bandit Level 7 → Level 8</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 7 requires users to locate a password stored in a file named <code>data.txt</code> next to the word "millionth".
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit7@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 6: <span class="command">morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj</span></p>
+
+                <h4>2. Locate the <code>data.txt</code> File:</h4>
+                <div class="command">ls</div>
+                <div class="output">data.txt</div>
+                
+                <h4>3. Retrieve the Password for Level 8:</h4>
+                <div class="command">grep millionth data.txt</div>
+                <div class="output">millionth    dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 8: <strong>dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc</strong>
+            </div>
+        </div>
+
+        <!-- Level 8 → 9 -->
+        <div class="level" id="level8">
+            <h2>Bandit Level 8 → Level 9</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 8 requires users to locate a password stored in a file named <code>data.txt</code>. The password is the only line of text that occurs once in the file.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit8@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 7: <span class="command">dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc</span></p>
+
+                <h4>2. Locate the <code>data.txt</code> File:</h4>
+                <div class="command">ls</div>
+                <div class="output">data.txt</div>
+                
+                <h4>3. Retrieve the Password for Level 9:</h4>
+                <div class="command">sort data.txt | uniq -u</div>
+                <div class="output">4CKMh1JI91bUIZZPXDqGanal4xvAg0JM</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 9: <strong>4CKMh1JI91bUIZZPXDqGanal4xvAg0JM</strong>
+            </div>
+        </div>
+
+        <!-- Level 9 → 10 -->
+        <div class="level" id="level9">
+            <h2>Bandit Level 9 → Level 10</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 9 requires users to locate a password stored in a file named <code>data.txt</code>. The password is one of the few human-readable strings in the file and is preceded by several '=' characters.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit9@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 8: <span class="command">4CKMh1JI91bUIZZPXDqGanal4xvAg0JM</span></p>
+
+                <h4>2. Locate the <code>data.txt</code> File:</h4>
+                <div class="command">ls</div>
+                <div class="output">data.txt</div>
+                
+                <h4>3. Retrieve the Password for Level 10:</h4>
+                <div class="command">strings data.txt | grep ===</div>
+                <div class="output">
+--- the
+33prD============ password
+-fDV3============ is
+90======= FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+                </div>
+            </div>
+            
+            <div class="password">
+                Password for Level 10: <strong>FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey</strong>
+            </div>
+        </div>
+
+        <!-- Level 10 → 11 -->
+        <div class="level" id="level10">
+            <h2>Bandit Level 10 → Level 11</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 10 requires users to decode a base64 encoded string stored in a file named <code>data.txt</code>. The password for the next level is contained within this decoded data.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit10@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 9: <span class="command">FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey</span></p>
+
+                <h4>2. Locate the <code>data.txt</code> File:</h4>
+                <div class="command">ls</div>
+                <div class="output">data.txt</div>
+                
+                <h4>3. Retrieve the Password for Level 11:</h4>
+                <div class="command">base64 -d data.txt</div>
+                <div class="output">The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 11: <strong>dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr</strong>
+            </div>
+        </div>
+
+        <!-- Level 11 → 12 -->
+        <div class="level" id="level11">
+            <h2>Bandit Level 11 → Level 12</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 11 requires users to decode a Rot13 encoded string stored in a file named <code>data.txt</code>. The password for the next level is contained within this decoded data.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The password for the next level is stored in the file <code>data.txt</code>, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions (Rot13).</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit11@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 10: <span class="command">dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr</span></p>
+                
+                <h4>2. Locate the <code>data.txt</code> File:</h4>
+                <div class="command">ls</div>
+                <div class="output">data.txt</div>
+                
+                <h4>3. Retrieve the Password for Level 12:</h4>
+                <div class="command">cat data.txt | tr '[A-Za-z]' '[N-ZA-Mn-za-m]'</div>
+                <div class="output">The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 12: <strong>7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4</strong>
+            </div>
+        </div>
+
+        <!-- Level 12 → 13 -->
+        <div class="level" id="level12">
+            <h2>Bandit Level 12 → Level 13</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 12 requires users to decode a hexdump stored in a file named <code>data.txt</code>. The hexdump represents a file that has been repeatedly compressed using different methods. The password for the next level is contained within this file after decompression.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The password for the next level is stored in the file <code>data.txt</code>, which is a hexdump of a file that has been repeatedly compressed.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit12@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 11: <span class="command">7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4</span></p>
+                
+                <h4>2. Create a Temporary Directory:</h4>
+                <div class="command">mkdir /tmp/try</div>
+                <div class="command">cp data.txt /tmp/try</div>
+                <div class="command">cd /tmp/try</div>
+                
+                <h4>3. Convert the Hexdump Back to Binary:</h4>
+                <div class="command">xxd -r data.txt > data</div>
+                
+                <h4>4. Identify and Decompress the File:</h4>
+                <div class="command">file data</div>
+                <div class="output">data: gzip compressed data, was "data2.bin", last modified: Thu Sep 30 07:08:13 2024, max compression, from Unix, original size modulo 2^32 574</div>
+                <div class="command">mv data data.gz</div>
+                <div class="command">gzip -d data.gz</div>
+                <div class="command">file data</div>
+                <div class="output">data: bzip2 compressed data, block size = 500k</div>
+                <div class="command">mv data data.bz</div>
+                <div class="command">bzip2 -d data.bz</div>
+                <div class="command">file data</div>
+                <div class="output">data: gzip compressed data, was "data4.bin", last modified: Thu Sep 30 07:08:13 2024, max compression, from Unix, original size modulo 2^32 20480</div>
+                <div class="command">mv data data.gz</div>
+                <div class="command">gzip -d data.gz</div>
+                <div class="command">file data</div>
+                <div class="output">data: POSIX tar archive (GNU)</div>
+                <div class="command">mv data data.tar</div>
+                <div class="command">tar xf data.tar</div>
+                <div class="command">file data5.bin</div>
+                <div class="output">data5.bin: POSIX tar archive (GNU)</div>
+                <div class="command">mv data5.bin data5.tar</div>
+                <div class="command">tar xf data5.tar</div>
+                <div class="command">file data6.bin</div>
+                <div class="output">data6.bin: bzip2 compressed data, block size = 900k</div>
+                <div class="command">mv data6.bin data6.bz</div>
+                <div class="command">bzip2 -d data6.bz</div>
+                <div class="command">file data6</div>
+                <div class="output">data6: POSIX tar archive (GNU)</div>
+                <div class="command">mv data6 data6.tar</div>
+                <div class="command">tar xf data6.tar</div>
+                <div class="command">file data8.bin</div>
+                <div class="output">data8.bin: gzip compressed data, was "data9.bin", last modified: Thu Sep 19 07:08:15 2024, max compression, from Unix, original size modulo 2^32 49</div>
+                <div class="command">mv data8.bin data8.gz</div>
+                <div class="command">gzip -d data8.gz</div>
+                <div class="command">file data8</div>
+                <div class="output">data8: ASCII text</div>
+                
+                <h4>5. Retrieve the Password for Level 13:</h4>
+                <div class="command">cat data8</div>
+                <div class="output">The password is FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 13: <strong>FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn</strong>
+            </div>
+        </div>
+
+        <!-- Level 13 → 14 -->
+        <div class="level" id="level13">
+            <h2>Bandit Level 13 → Level 14</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 13 provides a private SSH key that can be used to log into the next level as <code>bandit14</code>. The password for Level 14 is stored in a file that can only be read by <code>bandit14</code>.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The password for the next level is stored in <code>/etc/bandit_pass/bandit14</code> and can only be read by user <code>bandit14</code>.</li>
+                    <li>You are provided with a private SSH key to log into the next level.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit13@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 12: <span class="command">FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn</span></p>
+                
+                <h4>2. Locate the Private SSH Key:</h4>
+                <div class="command">ls</div>
+                <div class="output">sshkey.private</div>
+                
+                <h4>3. Use the Private SSH Key to Log into bandit14:</h4>
+                <div class="command">ssh -i sshkey.private bandit14@localhost -p 2220</div>
+                
+                <h4>4. Retrieve the Password for Level 14:</h4>
+                <div class="command">cat /etc/bandit_pass/bandit14</div>
+                <div class="output">MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 14: <strong>MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS</strong>
+            </div>
+        </div>
+
+        <!-- Level 14 → 15 -->
+        <div class="level" id="level14">
+            <h2>Bandit Level 14 → Level 15</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 14 requires users to submit the current level's password to a specific port on <code>localhost</code> to retrieve the password for the next level.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The password for the next level can be retrieved by submitting the password of the current level to port <code>30000</code> on <code>localhost</code>.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit14@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 13: <span class="command">MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS</span></p>
+                
+                <h4>2. Submit the Current Password to Port 30000:</h4>
+                <div class="command">echo "MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS" | nc localhost 30000</div>
+                <div class="output">correct!
+                    8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 15: <strong>8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo</strong>
+            </div>
+        </div>
+
+        <!-- Level 15 → 16 -->
+        <div class="level" id="level15">
+            <h2>Bandit Level 15 → Level 16</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 15 requires users to submit the current level's password to a specific port on <code>localhost</code> using SSL/TLS encryption to retrieve the password for the next level.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The password for the next level can be retrieved by submitting the password of the current level to port <code>30001</code> on <code>localhost</code> using SSL/TLS encryption.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit15@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 14: <span class="command">8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo</span></p>
+                
+                <h4>2. Submit the Current Password to Port 30001 Using SSL/TLS:</h4>
+                <div class="command">openssl s_client -connect localhost:30001</div>
+                <p>After establishing the connection, submit the current password:</p>
+                <div class="command">8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo</div>
+                <div class="output">Correct!
+                    kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 16: <strong>kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx</strong>
+            </div>
+        </div>
+
+        <!-- Level 16 → 17 -->
+        <div class="level" id="level16">
+            <h2>Bandit Level 16 → Level 17</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 16 requires users to submit the current level's password to a port on localhost within the range of 31000 to 32000. The goal is to identify which port is running a SSL/TLS service that will return the credentials for the next level.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The credentials for the next level can be retrieved by submitting the password of the current level to a port on localhost in the range 31000 to 32000.</li>
+                    <li>First, identify which ports have a server listening on them.</li>
+                    <li>Then, determine which of these ports speak SSL/TLS.</li>
+                    <li>Only one server will provide the next credentials; the others will echo back whatever you send.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit16@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 15: <span class="command">kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx</span></p>
+                
+                <h4>2. Scan for Open Ports in the Range 31000-32000:</h4>
+                <div class="command">nmap localhost -p 31000-32000</div>
+                <div class="output">
+Starting Nmap 7.94SVM ( https://nmap.org ) at 2025-03-02 15:15 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00025s latency).
+Not shown: 996 closed tcp ports (conn-refused)
+PORT    STATE SERVICE
+31046/tcp open unknown
+31518/tcp open unknown
+31691/tcp open unknown
+31790/tcp open unknown
+31960/tcp open unknown
+                </div>
+                
+                <h4>3. Identify the SSL/TLS Service:</h4>
+                <div class="command">ncat --ssl localhost 31518</div>
+                <p>Submit the current password to the port. If the port is the correct one, it will return an RSA private key.</p>
+                
+                <h4>4. Retrieve the RSA Private Key:</h4>
+                <div class="command">chmod 400 key</div>
+                
+                <h4>5. Use the RSA Private Key to Log into bandit17:</h4>
+                <div class="command">ssh -i key bandit17@localhost -p 2220</div>
+            </div>
+            
+            <div class="password">
+                <p>The RSA private key was retrieved from port <code>31518</code> and used to log into <code>bandit17</code>.</p>
+            </div>
+        </div>
+
+        <!-- Level 17 → 18 -->
+        <div class="level" id="level17">
+            <h2>Bandit Level 17 → Level 18</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 17 requires users to compare two files, passwords.old and passwords.new, to find the only line that has been changed. The password for the next level is the changed line in passwords.new.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>There are two files in the home directory: passwords.old and passwords.new.</li>
+                    <li>The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh -i key bandit17@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use the private key obtained in the previous level.</p>
+                
+                <h4>2. Locate the Password Files:</h4>
+                <div class="command">ls</div>
+                <div class="output">passwords.new passwords.old</div>
+                
+                <h4>3. Compare the Files to Find the Changed Line:</h4>
+                <div class="command">diff passwords.old passwords.new</div>
+                <div class="output">
+42c42
+< ktfgBvpWzWK85ENj2GfbLGSbIgU69CzB
+---
+> x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+                </div>
+                        </div>
+            
+            <div class="password">
+                Password for Level 18: <strong>x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO</strong>
+            </div>
+        </div>
+
+        <!-- Level 18 → 19 -->
+        <div class="level" id="level18">
+            <h2>Bandit Level 18 → Level 19</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 18 presents a unique challenge: the <code>bashrc</code> file has been modified to log you out immediately upon SSH login. The password for the next level is stored in a file named <code>readme</code> in the home directory.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>The password for the next level is stored in a file <code>readme</code> in the home directory.</li>
+                    <li>The <code>bashrc</code> file has been modified to log you out immediately upon SSH login.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server with a Different Shell:</h4>
+                <div class="command">ssh bandit18@bandit.labs.overthewire.org -p 2220 -t "/bin/sh"</div>
+                <p>Use password from Level 17: <span class="command">x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO</span></p>
+                
+                <h4>2. Locate and Read the readme File:</h4>
+                <div class="command">ls</div>
+                <div class="output">readme</div>
+                <div class="command">cat readme</div>
+                <div class="output">cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 19: <strong>cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8</strong>
+            </div>
+        </div>
+
+        <!-- Level 19 → 20 -->
+        <div class="level" id="level19">
+            <h2>Bandit Level 19 → Level 20</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 19 requires users to utilize a setuid binary located in the home directory to gain access to the password for the next level. The password is stored in the usual location (<code>/etc/bandit_pass</code>), but it can only be accessed by executing the setuid binary.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>Use the setuid binary in the home directory to execute commands as another user.</li>
+                    <li>The password for the next level can be found in <code>/etc/bandit_pass/bandit20</code> after using the setuid binary.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit19@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 18: <span class="command">cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8</span></p>
+                
+                <h4>2. Locate the Setuid Binary:</h4>
+                <div class="command">ls</div>
+                <div class="output">bandit20-do</div>
+                
+                <h4>3. Use the Setuid Binary to Read the Password:</h4>
+                <div class="command">./bandit20-do cat /etc/bandit_pass/bandit20</div>
+                <div class="output">0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 20: <strong>0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO</strong>
+            </div>
+        </div>
+
+        <!-- Level 20 → 21 -->
+        <div class="level" id="level20">
+            <h2>Bandit Level 20 → Level 21</h2>
+            
+            <div class="section">
+                <h3>Introduction</h3>
+                <p class="summary">
+                    Bandit Level 20 involves a setuid binary in the home directory that connects to a specified port on localhost, reads a line of text, and compares it to the password for the current level. If the password is correct, it transmits the password for the next level.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>Level Goal</h3>
+                <ul>
+                    <li>Use the setuid binary to connect to a specified port on localhost.</li>
+                    <li>Provide the current level's password to the binary to receive the password for the next level.</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>Methodology</h3>
+                <h4>1. Connect to the Server:</h4>
+                <div class="command">ssh bandit20@bandit.labs.overthewire.org -p 2220</div>
+                <p>Use password from Level 19: <span class="command">f0NoscT2yXQUvO</span></p>
+                
+                <h4>2. Locate the Setuid Binary:</h4>
+                <div class="command">ls</div>
+                <div class="output">suconnect</div>
+                
+                <h4>3. Set Up a Listener on a Port:</h4>
+                <div class="command">echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l -p 1234 &</div>
+                
+                <h4>4. Run the Setuid Binary to Connect to the Listener:</h4>
+                <div class="command">./suconnect 1234</div>
+                <div class="output">Read: 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO 
+Password matches, sending next password
+EeoULMCra2q0dSkYj561DX7s1CpBuOBt</div>
+            </div>
+            
+            <div class="password">
+                Password for Level 21: <strong>EeoULMCra2q0dSkYj561DX7s1CpBuOBt</strong>
+            </div>
+        </div>
+
+        <a href="/" class="home-btn">Home</a>
+    </div>
+</body>
+</html>

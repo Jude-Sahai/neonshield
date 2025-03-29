@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>POC Tasks - NeonShield CyberHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: url('/static/0.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+            position: relative;
+            color: #00DDEB;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 19, 47, 0.7);
+            z-index: -1;
+        }
+        
+        .container {
+            padding: 40px;
+            text-align: left;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid #FF00FF;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            text-decoration: none;
+            padding: 10px 20px;
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            font-size: 14px;
+            background: rgba(255, 0, 255, 0.1);
+            text-shadow: 0 0 10px #FF00FF;
+            transition: all 0.3s ease;
+            animation: neonFlicker 1.5s infinite alternate;
+            z-index: 100;
+        }
+        
+        .home-btn:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 15px #FF00FF;
+        }
+        
+        @keyframes neonFlicker {
+            0% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+            50% { text-shadow: 0 0 2px #FF00FF, 0 0 5px #FF00FF; }
+            100% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700;
+            animation: pulse 2s infinite;
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 221, 235, 0.3);
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            color: #FF00FF;
+            margin: 40px 0 20px;
+            text-shadow: 0 0 10px #FF00FF;
+            border-bottom: 1px solid #00DDEB;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.4em;
+            color: #00DDEB;
+            margin: 25px 0 15px;
+            text-shadow: 0 0 8px #00DDEB;
+        }
+        
+        h4 {
+            font-size: 1.2em;
+            color: #FFD700;
+            margin: 20px 0 12px;
+            text-shadow: 0 0 5px #FFD700;
+        }
+        
+        .task {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 4px solid #FF00FF;
+        }
+        
+        .summary {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        
+        .command {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 3px solid #00DDEB;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .output {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 3px solid #FF00FF;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .recommendations {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid #FF6666;
+        }
+        
+        .recommendations ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 8px;
+        }
+        
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #FFD700; }
+            50% { text-shadow: 0 0 20px #FFD700; }
+            100% { text-shadow: 0 0 10px #FFD700; }
+        }
+        
+        .task-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0, 221, 235, 0.3);
+        }
+        
+        .task-link {
+            padding: 10px 20px;
+            background: rgba(255, 0, 255, 0.1);
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+        
+        .task-link:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 10px #FF00FF;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .task {
+                padding: 20px;
+            }
+            
+            .task-nav {
+                gap: 10px;
+            }
+            
+            .task-link {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Proof of Concept Tasks</h1>
+        
+        <div class="task-nav">
+            <a href="#task1" class="task-link">Task 1</a>
+            <a href="#task2" class="task-link">Task 2</a>
+            <a href="#task3" class="task-link">Task 3</a>
+            <a href="#task4" class="task-link">Task 4</a>
+            <a href="#task5" class="task-link">Task 5</a>
+            <a href="#task6" class="task-link">Task 6</a>
+        </div>
+
+        <!-- Task 1 -->
+        <div class="task" id="task1">
+            <h2>Task 1: User & Permission Misconfigurations</h2>
+            
+            <div class="section">
+                <h3>1. Executive Summary</h3>
+                <p class="summary">
+                    This PoC demonstrates how incorrect permissions on sensitive system files (e.g., /etc/shadow) can allow low-privileged users to access critical information. The task involves creating users, misconfiguring file permissions, exploiting the misconfiguration, and then mitigating the issue by restoring proper permissions and ownership.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>2. Setup</h3>
+                <h4>Create Users</h4>
+                <div class="command">sudo useradd jesse</div>
+                <div class="command">sudo passwd jesse</div>
+                <div class="command">sudo useradd pinkman</div>
+                <div class="command">sudo passwd pinkman</div>
+                
+                <h4>Assign Incorrect Permissions</h4>
+                <div class="command">sudo chmod 777 /etc/shadow</div>
+            </div>
+            
+            <div class="section">
+                <h3>3. Exploitation</h3>
+                <div class="command">su jesse</div>
+                <div class="command">cat /etc/shadow</div>
+                <div class="output">
+root:1:20154:0:99999:7:::
+daemon:*:20154:0:99999:7:::
+bin:*:20154:0:99999:7:::
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>4. Mitigation</h3>
+                <div class="command">sudo chmod 640 /etc/shadow</div>
+                <div class="command">sudo chown root:shadow /etc/shadow</div>
+                <div class="command">ls -l /etc/shadow</div>
+                <div class="output">-rw-r----- 1 root shadow 1628 Mar 10 09:44 /etc/shadow</div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Regularly audit file permissions on critical system files</li>
+                    <li>Use tools like auditd or tripwire to monitor changes to sensitive files</li>
+                    <li>Educate system administrators about proper file permissions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="task" id="task2">
+            <h2>Task 2: Remote Access & SSH Hardening</h2>
+            
+            <div class="section">
+                <h3>1. Executive Summary</h3>
+                <p class="summary">
+                    This PoC demonstrates the risks associated with insecure SSH configurations, such as allowing root login and password-based authentication. The task involves enabling SSH, exploiting weak configurations through a brute-force attack, and mitigating the risks by hardening the SSH configuration.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>2. Setup</h3>
+                <div class="command">sudo systemctl start ssh</div>
+                <div class="command">sudo systemctl enable ssh</div>
+                <p>Edit /etc/ssh/sshd_config:</p>
+                <div class="command">PermitRootLogin yes</div>
+                <div class="command">PasswordAuthentication yes</div>
+            </div>
+            
+            <div class="section">
+                <h3>3. Exploitation</h3>
+                <div class="command">hydra -l jude -P wordlist.txt ssh://localhost</div>
+            </div>
+            
+            <div class="section">
+                <h3>4. Mitigation</h3>
+                <p>Edit /etc/ssh/sshd_config:</p>
+                <div class="command">PermitRootLogin no</div>
+                <div class="command">PasswordAuthentication no</div>
+                <div class="command">sudo systemctl restart ssh</div>
+                
+                <h4>Key-Based Authentication</h4>
+                <div class="command">ssh-keygen -t rsa -b 4096</div>
+                <div class="command">ssh-copy-id jude@localhost</div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Regularly update SSH configurations to follow security best practices</li>
+                    <li>Use tools like fail2ban to block repeated failed login attempts</li>
+                    <li>Monitor SSH logs for suspicious activity</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="task" id="task3">
+            <h2>Task 3: Firewall & Network Security</h2>
+            
+            <div class="section">
+                <h3>1. Executive Summary</h3>
+                <p class="summary">
+                    This PoC demonstrates the risks of having a web server exposed without proper firewall rules. The task involves setting up a basic web server, scanning for open ports, and mitigating risks by configuring a firewall to restrict access.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>2. Setup</h3>
+                <div class="command">sudo systemctl start apache2</div>
+                <div class="command">sudo systemctl enable apache2</div>
+                <div class="command">sudo ufw disable</div>
+            </div>
+            
+            <div class="section">
+                <h3>3. Exploitation</h3>
+                <div class="command">nmap 127.0.1.1</div>
+                <div class="output">
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+                </div>
+                <div class="command">echo -en "GET / HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n" | nc 127.0.0.1 80</div>
+            </div>
+            
+            <div class="section">
+                <h3>4. Mitigation</h3>
+                <div class="command">sudo ufw enable</div>
+                <div class="command">sudo ufw allow ssh</div>
+                <div class="command">sudo ufw allow http</div>
+                <div class="command">sudo ufw status verbose</div>
+                
+                <h4>IPTables Rules</h4>
+                <div class="command">sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT</div>
+                <div class="command">sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT</div>
+                <div class="command">sudo iptables -A INPUT -j DROP</div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Regularly review and update firewall rules</li>
+                    <li>Use tools like fail2ban to block repeated failed login attempts</li>
+                    <li>Monitor network traffic for suspicious activity</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Task 4 -->
+        <div class="task" id="task4">
+            <h2>Task 4: SUID Misconfigurations & Privilege Escalation</h2>
+            
+            <div class="section">
+                <h3>1. Executive Summary</h3>
+                <p class="summary">
+                    This PoC demonstrates the risks associated with SUID (Set User ID) misconfigurations, which can allow low-privileged users to escalate their privileges to root. The task involves setting up SUID misconfigurations, exploiting them to gain root access, and mitigating the risks by removing unnecessary SUID permissions.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>2. Setup</h3>
+                <h4>Set SUID Bit on /bin/bash</h4>
+                <div class="command">sudo chmod u+s /bin/bash</div>
+                <div class="command">ls -l /bin/bash</div>
+                <div class="output">rwsr-xr-x 1 root root 1302512 Feb 16 03:57 /bin/bash</div>
+                
+                <h4>Create Script with SUID Permissions</h4>
+                <div class="command">echo "echo 'Running as root!'" > script.sh</div>
+                <div class="command">sudo chmod 4755 script.sh</div>
+                <div class="command">sudo chown root.root script.sh</div>
+            </div>
+            
+            <div class="section">
+                <h3>3. Exploitation</h3>
+                <div class="command">find / -perm -4000 2>/dev/null</div>
+                <div class="output">
+/home/jude/script.sh
+/usr/bin/su
+/usr/bin/mount
+                </div>
+                <div class="command">/bin/bash -p</div>
+                <div class="output">bash-5.2# (root shell achieved)</div>
+            </div>
+            
+            <div class="section">
+                <h3>4. Mitigation</h3>
+                <div class="command">sudo chmod -s /bin/bash</div>
+                <div class="command">sudo chmod 750 script.sh</div>
+                <div class="command">sudo chown root:root script.sh</div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Regularly audit SUID/SGID files on the system</li>
+                    <li>Remove SUID/SGID permissions from files that don't require them</li>
+                    <li>Use tools like lynis or tripwire to monitor file permissions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Task 5 -->
+        <div class="task" id="task5">
+            <h2>Task 5: Automated Security Auditing & Scripting</h2>
+            
+            <div class="section">
+                <h3>1. Executive Summary</h3>
+                <p class="summary">
+                    This PoC demonstrates how a Bash script can automate security auditing tasks, including monitoring login attempts, running services, and disk usage. The script helps identify misconfigurations and provides mitigation steps like cron automation and alerts.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>2. Security Audit Script (security_audit.sh)</h3>
+                <div class="command">
+#!/bin/bash
+REPORT_FILE="security_audit_report.txt"
+echo "Security Audit Report - $(date)" > $REPORT_FILE
+
+# Check login attempts
+echo -e "\n=> User Login Attempts ==" >> $REPORT_FILE
+last -n 10 >> $REPORT_FILE
+grep "sshd" /var/log/auth.log | tail -n 10 >> $REPORT_FILE
+
+# Check running services
+echo -e "\n=> Running Services ==" >> $REPORT_FILE
+systemctl list-units --type-service --state-running >> $REPORT_FILE
+
+# Check disk usage
+echo -e "\n=> Disk Usage ==" >> $REPORT_FILE
+df -h >> $REPORT_FILE
+echo -e "\nAudit completed. Report saved to $REPORT_FILE"
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>3. Execution</h3>
+                <div class="command">bash security_audit.sh</div>
+                <div class="output">Audit completed. Report saved to security_audit_report.txt</div>
+            </div>
+            
+            <div class="section">
+                <h3>4. Mitigation</h3>
+                <h4>Cron Automation</h4>
+                <div class="command">0 3 * * * /path/to/security_audit.sh</div>
+                
+                <h4>Stop Unnecessary Services</h4>
+                <div class="command">sudo systemctl stop apache2 ssh</div>
+                
+                <h4>Enable fail2ban</h4>
+                <div class="command">sudo systemctl start fail2ban</div>
+                <div class="command">sudo systemctl enable fail2ban</div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Modify the script to send reports via email</li>
+                    <li>Combine with tools like lynis for deeper scans</li>
+                    <li>Allow only essential services</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Task 6 -->
+        <div class="task" id="task6">
+            <h2>Task 6: Log Analysis & Intrusion Detection</h2>
+            
+            <div class="section">
+                <h3>1. Executive Summary</h3>
+                <p class="summary">
+                    This PoC demonstrates the importance of log analysis and intrusion detection in identifying and mitigating brute-force attacks and unauthorized access attempts. The task involves enabling system logging, simulating failed SSH login attempts, analyzing logs, and implementing mitigation measures.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h3>2. Setup</h3>
+                <div class="command">sudo systemctl start rsyslog</div>
+                <div class="command">sudo systemctl enable rsyslog</div>
+                
+                <h4>Simulate Failed Logins</h4>
+                <div class="command">ssh user@localhost</div>
+            </div>
+            
+            <div class="section">
+                <h3>3. Log Analysis</h3>
+                <div class="command">grep "Failed password" /var/log/auth.log</div>
+                <div class="command">grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr</div>
+            </div>
+            
+            <div class="section">
+                <h3>4. Mitigation</h3>
+                <h4>Configure fail2ban</h4>
+                <div class="command">sudo nano /etc/fail2ban/jail.local</div>
+                <div class="output">
+[sshd]
+enabled = true
+maxretry = 3
+bantime = 3600
+                </div>
+                <div class="command">sudo systemctl restart fail2ban</div>
+                
+                <h4>Log Monitoring</h4>
+                <div class="command">sudo logwatch --detail high --mailto jude@gmail.com --range today</div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations:</h3>
+                <ul>
+                    <li>Regularly review logs for suspicious activity</li>
+                    <li>Use tools like fail2ban to automatically block malicious IPs</li>
+                    <li>Set up automated log monitoring and reporting</li>
+                </ul>
+            </div>
+        </div>
+
+        <a href="/" class="home-btn">Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Scanner - NeonShield CyberHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: url('/static/0.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            color: #00DDEB;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 19, 47, 0.7);
+            z-index: -1;
+        }
+        .container {
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid #FF00FF;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        .home-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-decoration: none;
+            padding: 8px 16px;
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            font-size: 14px;
+            background: rgba(255, 0, 255, 0.1);
+            text-shadow: 0 0 10px #FF00FF;
+            transition: all 0.3s ease;
+            animation: neonFlicker 1.5s infinite alternate;
+        }
+        .home-btn:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 15px #FF00FF;
+        }
+        @keyframes neonFlicker {
+            0% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+            50% { text-shadow: 0 0 2px #FF00FF, 0 0 5px #FF00FF; }
+            100% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700;
+            animation: pulse 2s infinite;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #00DDEB;
+            border-radius: 4px;
+            background: rgba(0, 221, 235, 0.1);
+            color: #00DDEB;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            text-shadow: 0 0 5px #00DDEB;
+        }
+        button {
+            padding: 10px 20px;
+            background: rgba(255, 0, 255, 0.1);
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px #FF00FF;
+            animation: neonFlicker 1.5s infinite alternate;
+        }
+        button:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 15px #FF00FF;
+        }
+        #results {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 221, 235, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            color: #00DDEB;
+            text-shadow: 0 0 5px #00DDEB;
+        }
+        .error {
+            color: #FF6666;
+            font-weight: bold;
+            text-shadow: 0 0 5px #FF6666;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #FFD700; }
+            50% { text-shadow: 0 0 20px #FFD700; }
+            100% { text-shadow: 0 0 10px #FFD700; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Virus Scanner</h1>
+        <input type="file" id="fileInput">
+        <button onclick="scanFile()">Scan File</button>
+        <div id="results"></div>
+        <a href="/" class="home-btn">Home</a>
+    </div>
+    <script>
+        function parseVirusTotalResults(data) {
+            const detectionCategories = Object.values(data.data.attributes.last_analysis_results)
+                .reduce((acc, result) => {
+                    acc[result.category] = (acc[result.category] || 0) + 1;
+                    return acc;
+                }, {});
+            const maliciousDetections = Object.entries(data.data.attributes.last_analysis_results)
+                .filter(([_, result]) => result.category === 'malicious')
+                .map(([engine, result]) => `${engine}: ${result.result}`);
+            const yaraRules = data.data.attributes.crowdsourced_yara_results || [];
+            let formattedResults = `
+File Analysis Report
+--------------------
+Detection Summary:
+- Total Engines: ${Object.keys(data.data.attributes.last_analysis_results).length}
+- Undetected: ${detectionCategories['undetected'] || 0}
+- Malicious: ${detectionCategories['malicious'] || 0}
+- Suspicious: ${detectionCategories['suspicious'] || 0}
+- Type Unsupported: ${detectionCategories['type-unsupported'] || 0}
+
+File Hashes:
+- MD5: ${data.data.attributes.filecondis?.raw_md5 || 'N/A'}
+- SHA256: ${data.data.attributes.sha256}
+
+Malicious Detections:
+${maliciousDetections.length > 0 ? maliciousDetections.join('\n') : 'No engines detected the file as malicious'}
+
+YARA Rule Matches:
+${yaraRules.length > 0 ? yaraRules.map(rule => `- ${rule.rule_name} (by ${rule.author})`).join('\n') : 'No YARA rules matched'}
+
+First Seen: ${new Date(data.data.attributes.first_seen_itw_date * 1000).toUTCString()}
+Last Analyzed: ${new Date(data.data.attributes.last_analysis_date * 1000).toUTCString()}
+
+Risk Assessment: ${maliciousDetections.length > 0 ? 'HIGH - Potential Malware Detected' : 'LOW - No Significant Threats'}
+            `;
+            return formattedResults;
+        }
+
+        async function scanFile() {
+            const fileInput = document.getElementById('fileInput');
+            const resultsDiv = document.getElementById('results');
+            const file = fileInput.files[0];
+            if (!file) {
+                resultsDiv.innerHTML = '<div class="error">Please select a file</div>';
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file);
+            try {
+                const response = await fetch('/virustotal-file', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                resultsDiv.innerHTML = `
+                    <h3>VirusTotal File Scan Results</h3>
+                    <pre>${parseVirusTotalResults(data)}</pre>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

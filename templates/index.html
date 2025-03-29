@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL/IP Scanner - NeonShield CyberHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: url('/static/0.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            color: #00DDEB;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 19, 47, 0.7);
+            z-index: -1;
+        }
+        .container {
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid #FF00FF;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        .home-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-decoration: none;
+            padding: 8px 16px;
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            font-size: 14px;
+            background: rgba(255, 0, 255, 0.1);
+            text-shadow: 0 0 10px #FF00FF;
+            transition: all 0.3s ease;
+            animation: neonFlicker 1.5s infinite alternate;
+        }
+        .home-btn:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 15px #FF00FF;
+        }
+        @keyframes neonFlicker {
+            0% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+            50% { text-shadow: 0 0 2px #FF00FF, 0 0 5px #FF00FF; }
+            100% { text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF; }
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700;
+            animation: pulse 2s infinite;
+        }
+        h3 {
+            font-size: 1.2em;
+            color: #00DDEB;
+            margin: 20px 0 10px;
+            text-shadow: 0 0 10px #00DDEB;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #00DDEB;
+            border-radius: 4px;
+            background: rgba(0, 221, 235, 0.1);
+            color: #00DDEB;
+            font-family: 'Orbitron', 'Courier New', monospace;
+            text-shadow: 0 0 5px #00DDEB;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: rgba(255, 0, 255, 0.1);
+            color: #FF00FF;
+            border: 1px solid #FF00FF;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px #FF00FF;
+            animation: neonFlicker 1.5s infinite alternate;
+        }
+        button:hover {
+            background: #FF00FF;
+            color: #1A132F;
+            box-shadow: 0 0 15px #FF00FF;
+        }
+        #urlResults, #ipResults {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 221, 235, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            color: #00DDEB;
+            text-shadow: 0 0 5px #00DDEB;
+        }
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #FFD700; }
+            50% { text-shadow: 0 0 20px #FFD700; }
+            100% { text-shadow: 0 0 10px #FFD700; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Secure Sphere</h1>
+        <div class="input-section">
+            <h3>URL Scan</h3>
+            <input type="text" id="urlInput" placeholder="Enter URL">
+            <div class="button-group">
+                <button onclick="virusTotalURLScan()">VirusTotal Scan</button>
+            </div>
+            <div id="urlResults"></div>
+        </div>
+        <div class="input-section">
+            <h3>IP Scan</h3>
+            <input type="text" id="ipInput" placeholder="Enter IP Address">
+            <div class="button-group">
+                <button onclick="virusTotalIPScan()">VirusTotal Scan</button>
+                <button onclick="abuseIPDBScan()">AbuseIPDB Scan</button>
+            </div>
+            <div id="ipResults"></div>
+        </div>
+        <a href="/" class="home-btn">Home</a>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
