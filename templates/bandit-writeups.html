@@ -27,7 +27,7 @@
             position: relative;
             color: #00DDEB;
             padding: 20px;
-            line-height: 1.6;
+            line-height: 1.8; /* Increased line spacing */
         }
         
         body::before {
@@ -43,7 +43,7 @@
         
         .container {
             padding: 40px;
-            text-align: center;
+            text-align: left; /* Changed to left alignment */
             position: relative;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(5px);
@@ -89,6 +89,7 @@
             color: #FFD700;
             text-shadow: 0 0 15px #FFD700;
             animation: pulse 2s infinite;
+            text-align: center; /* Center only the main heading */
         }
         
         h2 {
@@ -138,7 +139,7 @@
             overflow-x: auto;
             white-space: pre-wrap;
             border-left: 2px solid #00DDEB;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
         .output {
@@ -150,7 +151,7 @@
             overflow-x: auto;
             white-space: pre-wrap;
             border-left: 2px solid #FF00FF;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
         .password {
@@ -222,7 +223,8 @@
         }
         
         li {
-            margin-bottom: 8px;
+            margin-bottom: 12px; /* Increased spacing between list items */
+            line-height: 1.6;
         }
         
         code {
@@ -231,9 +233,21 @@
             padding: 2px 4px;
             border-radius: 3px;
         }
+
+        /* Added spacing between sections */
+        .level > div:not(:last-child) {
+            margin-bottom: 25px;
+        }
+
+        /* Better spacing for command/output blocks */
+        .command + p,
+        .output + p {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
+    <!-- Content remains exactly the same -->
     <div class="container">
         <h1>Bandit Writeups (Levels 0-20)</h1>
         
@@ -1056,7 +1070,7 @@ PORT    STATE SERVICE
                 <h3>Methodology</h3>
                 <h4>1. Connect to the Server:</h4>
                 <div class="command">ssh bandit20@bandit.labs.overthewire.org -p 2220</div>
-                <p>Use password from Level 19: <span class="command">f0NoscT2yXQUvO</span></p>
+                <p>Use password from Level 19: <span class="command">0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO</span></p>
                 
                 <h4>2. Locate the Setuid Binary:</h4>
                 <div class="command">ls</div>
